@@ -28,3 +28,6 @@ next-env.d.ts
 # editor config
 .vscode/
 .idea/
+
+# drizzle migrations
+/drizzle
