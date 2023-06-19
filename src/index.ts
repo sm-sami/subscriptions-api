@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import router from "./routes/user-routes";
+import userRouter from "./routes/user-routes";
+import adminRouter from "./routes/admin-routes";
+import { authenticateAdmin } from "./utils/middlewares";
 import { PORT } from "./utils/config";
 
 const app = express();
@@ -16,7 +18,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/user", router);
+app.use("/user", userRouter);
+app.use("/admin", authenticateAdmin, adminRouter);
 
 app.listen(PORT, () =>
   console.log(`Server running at http://localhost:${PORT}`)
