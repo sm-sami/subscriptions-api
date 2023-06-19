@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { addUserHandler, verifyUserHandler, deleteUserHandler } from "../controllers/user-controllers";
+import {
+  addUserHandler,
+  verifyUserHandler,
+  deleteUserHandler,
+} from "../controllers/user-controllers";
 
 const router = Router();
 

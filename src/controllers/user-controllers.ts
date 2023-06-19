@@ -1,15 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import {
-  addUserSchema,
-  verifyUserSchema,
-  removeUserSchema,
-} from "../schema";
-import {
-  addUser,
-  verifyUser,
-  deleteUser,
-} from "../services/user-services";
+import { addUserSchema, verifyUserSchema, removeUserSchema } from "../schema";
+import { addUser, verifyUser, deleteUser } from "../services/user-services";
 import { handleValidationError } from "../utils/errors";
 import { PostgresError } from "postgres";
 import type { Request, Response } from "express";
@@ -37,7 +29,7 @@ const addUserHandler = async (req: Request, res: Response) => {
   }
 };
 
-const verifyUserHandler =  async (req: Request, res: Response) => {
+const verifyUserHandler = async (req: Request, res: Response) => {
   try {
     const { email, code } = verifyUserSchema.parse(req.query);
     if (!code) {
