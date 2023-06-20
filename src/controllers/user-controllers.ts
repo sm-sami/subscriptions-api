@@ -1,23 +1,18 @@
 import { Router } from "express";
-import { z } from "zod";
-import { addUserSchema, verifyUserSchema, removeUserSchema } from "../schema";
+import { addUserSchema, verifyUserSchema, deleteUserSchema } from "../schema";
 import { addUser, verifyUser, deleteUser } from "../services/user-services";
-import { handleValidationError } from "../utils/errors";
 import { PostgresError } from "postgres";
 import type { Request, Response } from "express";
 
 const router = Router();
 
-const addUserHandler = async (req: Request, res: Response) => {
+const handleAddUser = async (req: Request, res: Response) => {
   try {
     const user = addUserSchema.parse(req.query);
     const addedUser = await addUser(user);
     await res.status(201).json(addedUser);
   } catch (err) {
-    if (err instanceof z.ZodError) {
-      const error = handleValidationError(err);
-      await res.status(400).json({ error });
-    } else if (err instanceof PostgresError) {
+    if (err instanceof PostgresError) {
       await res
         .status(409)
         .json({ error: "User with the specified email already exists" });
@@ -29,7 +24,7 @@ const addUserHandler = async (req: Request, res: Response) => {
   }
 };
 
-const verifyUserHandler = async (req: Request, res: Response) => {
+const handleVerifyUser = async (req: Request, res: Response) => {
   try {
     const { email, code } = verifyUserSchema.parse(req.query);
     if (!code) {
@@ -43,30 +38,20 @@ const verifyUserHandler = async (req: Request, res: Response) => {
         .json({ message: `User with email ${email} is verified` });
     else await res.status(401).json({ error: "Invalid verification code" });
   } catch (err) {
-    if (err instanceof z.ZodError) {
-      const error = handleValidationError(err);
-      await res.status(400).json({ error });
-    } else {
-      await res.status(500).json({ error: "Something went wrong" });
-    }
+    await res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-const deleteUserHandler = async (req: Request, res: Response) => {
+const handleDeleteUser = async (req: Request, res: Response) => {
   try {
-    const { email } = removeUserSchema.parse(req.query);
+    const { email } = deleteUserSchema.parse(req.query);
     const deletedUser = await deleteUser(email);
     if (deletedUser)
       res.status(200).json({ message: `Removed user with email ${email}` });
     else res.status(404).json({ error: `User with email ${email} not found` });
   } catch (err) {
-    if (err instanceof z.ZodError) {
-      const error = handleValidationError(err);
-      await res.status(400).json({ error });
-    } else {
-      await res.status(500).json({ error: "Something went wrong" });
-    }
+    await res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-export { addUserHandler, verifyUserHandler, deleteUserHandler };
+export { handleAddUser, handleVerifyUser, handleDeleteUser };

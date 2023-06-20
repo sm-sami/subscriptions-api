@@ -33,7 +33,7 @@ export const verifyUserSchema = createSelectSchema(users, {}).pick({
   code: true,
 });
 
-export const removeUserSchema = createSelectSchema(users, {}).pick({
+export const deleteUserSchema = createSelectSchema(users, {}).pick({
   email: true,
 });
 

@@ -1,14 +1,24 @@
 import { Router } from "express";
 import {
-  addUserHandler,
-  verifyUserHandler,
-  deleteUserHandler,
+  handleAddUser,
+  handleVerifyUser,
+  handleDeleteUser,
 } from "../controllers/user-controllers";
+import { validateRequest } from "../middlewares/validator";
+import { addUserSchema, verifyUserSchema, deleteUserSchema } from "../schema";
 
 const router = Router();
 
-router.post("/create", addUserHandler);
-router.patch("/verify", verifyUserHandler);
-router.delete("/remove", deleteUserHandler);
+router.post("/create", validateRequest("query", addUserSchema), handleAddUser);
+router.patch(
+  "/verify",
+  validateRequest("query", verifyUserSchema),
+  handleVerifyUser
+);
+router.delete(
+  "/remove",
+  validateRequest("query", deleteUserSchema),
+  handleDeleteUser
+);
 
 export default router;

@@ -3,7 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import userRouter from "./routes/user-routes";
 import adminRouter from "./routes/admin-routes";
-import { authenticateAdmin } from "./utils/middlewares";
+import { authenticateAdmin } from "./middlewares/auth";
 import { PORT } from "./utils/config";
 
 const app = express();
