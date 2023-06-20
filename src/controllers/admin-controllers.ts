@@ -4,7 +4,7 @@ import {
 } from "../services/admin-services";
 import type { Request, Response } from "express";
 
-const getAllVerifiedUsersHandler = async (req: Request, res: Response) => {
+const handleGetAllVerifiedUsers = async (req: Request, res: Response) => {
   try {
     const users = await getAllVerifiedUsers();
     await res.status(200).json(users);
@@ -13,7 +13,7 @@ const getAllVerifiedUsersHandler = async (req: Request, res: Response) => {
   }
 };
 
-const deleteAllUnverifiedUsersHandler = async (req: Request, res: Response) => {
+const handleDeleteAllUnverifiedUsers = async (req: Request, res: Response) => {
   try {
     const users = await deleteAllUnverifiedUsers();
     await res.status(200).json({
@@ -24,4 +24,4 @@ const deleteAllUnverifiedUsersHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllVerifiedUsersHandler, deleteAllUnverifiedUsersHandler };
+export { handleGetAllVerifiedUsers, handleDeleteAllUnverifiedUsers };
