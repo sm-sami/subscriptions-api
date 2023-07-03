@@ -1,15 +1,34 @@
 import { Router } from "express";
 import { addUserSchema, verifyUserSchema, deleteUserSchema } from "../schema";
-import { addUser, verifyUser, deleteUser } from "../services/user-services";
+import {
+  addUser,
+  verifyUser,
+  deleteUser,
+  sendVerificationEmail,
+} from "../services/user-services";
 import { PostgresError } from "postgres";
 import type { Request, Response } from "express";
+import { API_BASE_URL } from "../utils/config";
 
 const router = Router();
 
 const handleAddUser = async (req: Request, res: Response) => {
   try {
     const user = addUserSchema.parse(req.query);
-    const addedUser = await addUser(user);
+    const { user: addedUser, code } = await addUser(user);
+
+    const status = await sendVerificationEmail(
+      API_BASE_URL,
+      addedUser.name,
+      addedUser.email,
+      code
+    );
+
+    if (status !== 200) {
+      await deleteUser(addedUser.email);
+      await res.status(500).json({ error: "Something went wrong" });
+    }
+
     await res.status(201).json(addedUser);
   } catch (err) {
     if (err instanceof PostgresError) {
