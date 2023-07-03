@@ -10,7 +10,7 @@ import { addUserSchema, verifyUserSchema, deleteUserSchema } from "../schema";
 const router = Router();
 
 router.post("/create", validateRequest("query", addUserSchema), handleAddUser);
-router.patch(
+router.get(
   "/verify",
   validateRequest("query", verifyUserSchema),
   handleVerifyUser
