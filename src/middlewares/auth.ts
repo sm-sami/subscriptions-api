@@ -7,11 +7,12 @@ export const authenticateAdmin = (
   next: NextFunction
 ) => {
   const { authorization } = req.headers;
+
   if (authorization === `Bearer ${AUTH_TOKEN}`) {
-    next();
-  } else {
-    res.status(401).json({
-      error: "You are not authorized to do this operation",
-    });
+    return next();
   }
+
+  res.status(401).json({
+    error: "You are not authorized to do this operation",
+  });
 };
