@@ -31,6 +31,14 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/healthcheck", (req, res) => {
+  res.json({
+    message: "Server is running",
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+  });
+});
+
 app.use("/user", userRouter);
 app.use("/admin", authenticateAdmin, adminRouter);
 
