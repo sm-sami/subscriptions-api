@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
+import rateLimit from "express-rate-limit";
 import userRouter from "./routes/user-routes";
 import adminRouter from "./routes/admin-routes";
 import { authenticateAdmin } from "./middlewares/auth";
@@ -10,6 +11,18 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    handler: (req, res, next) => {
+      console.log(`DDoS Attempt from ${req.ip}`);
+      res.status(429).json({
+        error: "Too many requests in a short time. Please try in a minute.",
+      });
+    },
+  })
+);
 app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
